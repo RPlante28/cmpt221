@@ -24,7 +24,11 @@ def insert_professors():
     session = get_session()
     try:
         # TODO: create three professor objects
+        professor1 = Professor(FirstName="John", LastName="Doe", Email="john.doe1@marist.edu")
+        professor2 = Professor(FirstName="Jane", LastName="Doe", Email="jane.doe1@marist.edu")
+        professor3 = Professor(FirstName="Gary", LastName="Smith", Email="gary.smith1@marist.edu")
         # TODO: use the sqlalchemy orm to insert the new records as a list of professor objects
+        session.add_all([professor1, professor2, professor3])
         # "save" the changes
         session.commit()
 
@@ -40,8 +44,13 @@ def update_professor():
     session = get_session()
     try:
         # TODO: get professor to be updated (would ideally be a parameter)
+        professor = session.query(Professor).filter(Professor.ProfessorID == 1).scalar_one_or_none()
         # TODO: use the sqlalchemy orm to update 1 record
-        # "save" the changes
+        if professor:
+            professor.FirstName = "Carl"
+        else:
+            print("Professor not found")
+            # "save" the changes
         session.commit()
     
     except Exception as e:
@@ -56,9 +65,12 @@ def delete_professor():
     session = get_session()
     try:
         # TODO: get professor to be deleted (would ideally be a parameter)
+        professor = session.query(Professor).filter(Professor.ProfessorID == 2).scalar_one_or_none()
         # TODO: use the sqlalchemy orm to delete 1 record
+        if professor:
+            session.delete(professor)
         # "save" the changes
-        session.commit()
+            session.commit()
 
     except Exception as e:
         session.rollback()
