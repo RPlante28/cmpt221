@@ -2,8 +2,8 @@
 
 import os
 from dotenv import load_dotenv
-from flask import Flask, render_template
-from db.query import get_all
+from flask import Flask, render_template, request, redirect, url_for
+from db.query import get_all, insert, get_record_by_field
 from db.server import init_database
 from db.schema import Users
 
@@ -42,18 +42,50 @@ def create_app():
         """Home page"""
         return render_template('index.html')
     
-    @app.route('/signup')
+    @app.route('/signup', methods=['GET', 'POST'])
     def signup():
         """Sign up page: enables users to sign up"""
         #TODO: implement sign up logic here
+        if request.method == 'POST':
+            try:
+                # create user objects using information from the form
+                user = Users(
+                    FirstName=request.form["FirstName"],
+                    LastName=request.form["LastName"],
+                    Email=request.form["Email"],
+                    PhoneNumber=request.form["PhoneNumber"],
+                    Password=request.form["Password"]
+                )
+
+                insert(user)
+            finally:
+                return redirect(url_for('index'))
 
         return render_template('signup.html')
     
-    @app.route('/login')
+    @app.route('/login', methods=['GET', 'POST'])
     def login():
         """Log in page: enables users to log in"""
         # TODO: implement login logic here
-
+        if request.method == 'POST':
+            try:
+                all_users = get_all(Users)
+                valid_pass = False
+                valid_email = False
+                for user in all_users:
+                    if user.Email == request.form["Email"]:
+                        valid_email = True
+                    if user.Password == request.form["Password"]:
+                        valid_pass = True
+                if not (valid_email and valid_pass):
+                    raise Exception("Incorrect Credentials")
+            except Exception as e:
+                print("Exception:", e)
+            finally:
+                if valid_email and valid_pass:
+                    return redirect(url_for('success'))
+                else:
+                    return redirect(url_for('login'))
         return render_template('login.html')
 
     @app.route('/users')
@@ -62,6 +94,7 @@ def create_app():
         all_users = get_all(Users)
         
         return render_template('users.html', users=all_users)
+        
 
     @app.route('/success')
     def success():
