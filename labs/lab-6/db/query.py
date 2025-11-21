@@ -44,29 +44,20 @@ def insert(record) -> None:
     finally:
         session.close()
 
-def get_record_by_field(table, field, field_value) -> list:
-    """Get the full record associated with a field and its value
+def get_user_by_email(table, email) -> object:
+    """Select a user record from a DB table by email using SQLAlchemy ORM.
 
-        args:
+        args: 
             table (object): db table
-            field (object): field to get record by
-            field_value (variable): value of the field to check
-    
+            email (str): email of user to retrieve
         returns:
-            entire record as list
+            record (obj): user record from db table
     """
     session = get_session()
     try:
-        eval_field = eval(f"Users.{field}")
-        record = session.query(table).filter(eval_field == field_value).scalar_one_or_none()
-        if record:
-            print("Record Found")
-        else:
-            print("Record not found")
-    except Exception as e:
-        session.rollback()
-        print("Error finding record:", e)
-    finally:
+        # get user record by email
+        record = session.execute(select(table).where(table.Email == email)).scalar_one_or_none()
         return record
     
-    return None
+    finally:
+        session.close()
