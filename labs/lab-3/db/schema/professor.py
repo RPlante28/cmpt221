@@ -4,6 +4,9 @@ from db.server import db
 class Professor(db.Model):
     __tablename__ = 'Professors'
     ProfessorID = db.Column(db.Integer,primary_key=True, autoincrement=True)
+    PFirstN = db.Column(db.String(40))
+    PLastN = db.Column(db.String(40))
+    PAddress = db.Column(db.String(40))
 
     # create relationship with courses table. assoc table name = ProfessorCourse
     course = db.relationship('Courses', secondary = 'ProfessorCourse', back_populates = 'Professors')
