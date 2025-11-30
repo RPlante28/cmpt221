@@ -20,7 +20,10 @@ db_url = f"postgresql://{db_owner}:{db_pass}@localhost/{db_name}"
 
 # logging config
 logging.basicConfig(
-    filename = "logs/logs.txt", level=logging.INFO, filemode="a", format="%(asctime)s [%(levelname)s%] %(message)s"
+    filename="logs/logs.txt",
+    level=logging.ERROR,
+    filemode="a",
+    format="%(asctime)s [%(levelname)s] %(message)s"
 )
 
 logger = logging.getLogger(__name__)
@@ -38,6 +41,7 @@ def create_app():
     # Initialize database
     with app.app_context():
         if not init_database():
+            logger.error("Failed to initialize database. Exiting.")
             print("Failed to initialize database. Exiting.")
             exit(1)
 
@@ -64,6 +68,14 @@ def create_app():
             phone = request.form["PhoneNumber"].strip()
             password = request.form["Password"].strip()
 
+            # detailed validation logs
+            if not fname.isalpha():
+                logger.error(f"Invalid first name submitted: '{fname}'")
+            if not lname.isalpha():
+                logger.error(f"Invalid last name submitted: '{lname}'")
+            if not phone.isdigit() or len(phone) != 10:
+                logger.error(f"Invalid phone number submitted: '{phone}'")
+
             is_valid = fname.isalpha() and lname.isalpha() and len(phone) == 10 and phone.isdigit()
             if not is_valid:
                 flash("Invalid input.")
@@ -87,7 +99,7 @@ def create_app():
                 except Exception as e:
                     flash("Exception:", e)
                     error = "Failed to create user."
-                    logger.error(f"Error creating user: {e}")
+                    logger.error(f"Error creating user ({email}): {e}")
                     # log the error message
                     flash("Error:", error)
 
@@ -111,9 +123,16 @@ def create_app():
                     valid_email = True
                     if bcrypt.checkpw(password.encode('utf-8'), user.Password.encode('utf-8')):
                         valid_pass = True
+
+                if not valid_email:
+                    logger.error(f"Login attempt with bad email: {email}")
+                if valid_email and not valid_pass:
+                    logger.error(f"Incorrect password attempt for: {email}")
+
                 if not (valid_email and valid_pass):
                     raise Exception("Incorrect Credentials")
             except Exception as e:
+                logger.error(f"Login error for {email}: {e}")
                 print("Exception:", e)
             finally:
                 if valid_email and valid_pass:
