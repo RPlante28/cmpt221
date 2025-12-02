@@ -41,6 +41,20 @@ def create_app():
         return render_template('index.html')
     
     # add more routes here!
+    @app.route('/layer2')
+    def layer2():
+        """Layer 2 page"""
+        return render_template('layer2.html')
+
+    @app.route('/layer3')
+    def layer3():
+        """Layer 3 page"""
+        return render_template('layer3.html')
+
+    @app.route('/layer4')
+    def layer4():
+        """Layer 4 page"""
+        return render_template('layer4.html')
 
     return app
 

@@ -1,14 +1,66 @@
 body {
-    background-color: lightblue;
-  }
-  
-  h1 {
-    color: blueviolet;
-    text-align: center;
-  }
-  
-  p {
-    font-family: verdana;
-    font-size: 20px;
-    text-align: center;
-  }
+    background-color: #00ff99;
+    background-image: repeating-linear-gradient(45deg, #00ff99, #ff00ff 10px, #00ffff 20px);
+    color: #0000ff;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    animation: bgflash 4s infinite alternate;
+    overflow-x: hidden;
+}
+
+@keyframes bgflash {
+    0% { background-color: #ffcc00; }
+    50% { background-color: #00ffff; }
+    100% { background-color: #ff66ff; }
+}
+
+header, footer {
+    border: 5px double black;
+    padding: 10px;
+    text-shadow: 1px 1px 0 white, -1px -1px 0 black;
+}
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    font-size: 12px;
+}
+div{
+    margin: 50px auto;
+    max-width: 700px;
+    border: 4px groove pink;
+    background: #ffffe0;
+    padding: 20px;
+    box-shadow: 10px 10px 0px lime;
+}
+
+button {
+    background: linear-gradient(45deg, magenta, cyan);
+    border: 3px solid black;
+    font-size: 16px;
+    padding: 10px;
+    cursor: pointer;
+    margin: 10px;
+}
+
+button:hover {
+    background: linear-gradient(45deg, red, yellow);
+    transform: rotate(10deg);
+}
+img {
+    width: 150px;
+    height: 100px;
+    border: 5px ridge #ff00ff;
+    filter: contrast(200%) saturate(300%) blur(1px);
+    margin: 15px;
+    transition: all 0.3s ease;
+}
+img:hover {
+    transform: rotate(15deg) scale(1.3);
+    filter: hue-rotate(180deg);
+}
+span.char {
+    display: inline-block;
+}

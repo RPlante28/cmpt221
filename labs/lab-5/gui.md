@@ -15,7 +15,7 @@
 5. Create a branch for lab 5
     ```bash
     git checkout -b "lab-5" 
-    ```
+    <!-- ``` -->
 6. Activate your virtual environment
 7. Navigate to your `lab-5` directory
     ```bash
