@@ -2,7 +2,7 @@
 
 Introduction
 ============
-<tell the reader about the project>
+This is a project repo for my Soft Dev 2 class. Has some pretty cool stuff, definitley check out Lab 5!
 
 Documentation
 -------------
